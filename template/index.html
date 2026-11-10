@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- 【替换】META_DESC：浏览器搜索描述，格式「姓名 · 职位 个人简历」 -->
+<meta name="description" content="{{META_DESC}}">
+<title>{{CN_NAME}} · {{JOB_TITLE}}</title>
+<!-- 【替换】分享卡片（微信/IM 转发时展示）：OG_IMG 建议 1200x630，放 assets/og.png -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{CN_NAME}} · {{JOB_TITLE}}">
+<meta property="og:description" content="{{META_DESC}}">
+<meta property="og:image" content="assets/{{OG_IMG}}">
+<!-- favicon：内联 SVG，无额外请求；可换成 assets/favicon.ico -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232B7FD8'/%3E%3Ctext x='16' y='22' font-size='17' text-anchor='middle' fill='%23FFD84D' font-family='cursive'%3E%E2%9C%A6%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<!-- ======================= 顶栏导航（PC）—— 四个页签名可改，data-nav 勿动 ======================= -->
+<header class="topbar">
+  <nav class="top-nav" aria-label="主导航">
+    <a href="#home"  data-nav="home">首页</a>
+    <a href="#work"  data-nav="work">{{NAV2}}</a>
+    <a href="#path"  data-nav="path">{{NAV3}}</a>
+    <a href="#about" data-nav="about">{{NAV4}}</a>
+  </nav>
+
+  <button class="menu-btn" id="menuBtn" aria-label="打开菜单" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- ======================= 侧边栏（移动端抽屉）—— 与顶栏保持一致 ======================= -->
+<div class="scrim" id="scrim" hidden></div>
+<aside class="sidebar" id="sidebar" aria-label="移动端导航">
+  <nav class="side-nav" aria-label="侧边导航">
+    <a href="#home"  data-nav="home">首页</a>
+    <a href="#work"  data-nav="work">{{NAV2}}</a>
+    <a href="#path"  data-nav="path">{{NAV3}}</a>
+    <a href="#about" data-nav="about">{{NAV4}}</a>
+  </nav>
+  <p class="side-foot">{{EMAIL}}</p>
+</aside>
+
+<main>
+
+  <!-- ======================= 第 1 页：首页 ======================= -->
+  <section id="page-home" class="page active">
+    <div class="hero">
+
+      <!-- 左：文字区 -->
+      <div class="hero-copy">
+        <p class="hero-en rv" style="--d:.02s">{{EN_GREETING}}</p>
+        <h1 class="rv" style="--d:.08s">{{CN_NAME}}</h1>
+        <p class="hero-tag rv" style="--d:.14s">{{TAGLINE}}</p>
+        <p class="hero-desc rv" style="--d:.2s">
+          {{INTRO}}
+        </p>
+
+        <div class="hero-actions rv" style="--d:.26s">
+          <!-- 【替换】PDF_FILE：把简历 PDF 放入 assets/ 并用英文文件名 -->
+          <a class="btn primary" href="assets/{{PDF_FILE}}" download="{{PDF_FILE}}">下载简历</a>
+          <!-- 微信内置浏览器会显示这条提示（site.js 检测 UA），其他环境隐藏 -->
+          <p class="dl-hint" id="dlHint" hidden>微信内无法直接下载，请长按打开 PDF 后保存，或复制链接到浏览器下载</p>
+        </div>
+
+        <ul class="hero-contact rv" style="--d:.32s">
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>
+            <a href="tel:{{PHONE}}">{{PHONE}}</a>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+            <a href="mailto:{{EMAIL}}">{{EMAIL}}</a>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>
+            <span>求职意向：{{JOB_INTENT}}</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 右：动画元素组合 —— 中心卡片 + 五枚气泡（随鼠标公转）。
+           【定制区】以下文字均可替换为个人关键词；气泡数量增减时同步调整
+           style.css 中 .chip-* 的定位；不确定就只改 chip-txt 文字，结构保留。 -->
+      <div class="hero-art rv" style="--d:.18s" aria-hidden="true">
+        <span class="blob blob-a"></span>
+        <span class="blob blob-b"></span>
+
+        <div class="ring-wrap">
+          <svg class="art-ring ring-a" viewBox="0 0 520 520">
+            <ellipse cx="260" cy="260" rx="238" ry="152" />
+          </svg>
+          <svg class="art-ring ring-b" viewBox="0 0 520 520">
+            <ellipse cx="260" cy="260" rx="196" ry="212" transform="rotate(24 260 260)" />
+          </svg>
+        </div>
+
+        <div class="orbit">
+          <!-- 左上气泡（带声波动效） -->
+          <div class="chip chip-asr">
+            <div class="chip-in">
+              <span class="chip-ico">
+                <svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+              </span>
+              <span class="chip-txt">{{CHIP1_TXT}}</span>
+              <span class="wave"><i></i><i></i><i></i><i></i><i></i></span>
+            </div>
+          </div>
+
+          <!-- 右上气泡 -->
+          <div class="chip chip-acc">
+            <div class="chip-in">
+              <span class="chip-ico">
+                <svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>
+              </span>
+              <span class="chip-txt">{{CHIP2_TXT}}</span>
+            </div>
+          </div>
+
+          <!-- 右中气泡 -->
+          <div class="chip chip-rep">
+            <div class="chip-in">
+              <span class="chip-ico">
+                <svg viewBox="0 0 24 24"><path d="M15.2 5.2a4.4 4.4 0 0 0-5.9 5.6L3.4 16.7a2.1 2.1 0 1 0 3 3l5.9-5.9a4.4 4.4 0 0 0 5.6-5.9l-2.8 2.8-2.7-2.7z"/></svg>
+              </span>
+              <span class="chip-txt">{{CHIP3_TXT}}</span>
+            </div>
+          </div>
+
+          <!-- 左下气泡 -->
+          <div class="chip chip-ava">
+            <div class="chip-in">
+              <span class="chip-ico">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="9.2" cy="10.5" r=".9" class="fill"/><circle cx="14.8" cy="10.5" r=".9" class="fill"/><path d="M8.8 14.2a4.4 4.4 0 0 0 6.4 0"/></svg>
+              </span>
+              <span class="chip-txt">{{CHIP4_TXT}}</span>
+            </div>
+          </div>
+
+          <!-- 右下气泡（带红点 ping 动效） -->
+          <div class="chip chip-msg">
+            <div class="chip-in">
+              <span class="chip-ico">
+                <svg viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 1 1 12 0v5l1.5 2.5h-15z"/><path d="M10 21a2.2 2.2 0 0 0 4 0"/></svg>
+                <i class="ping"></i>
+              </span>
+              <span class="chip-txt">{{CHIP5_TXT}}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 中心卡片标题 + 状态胶囊（状态词 + 右侧补充信息，每 5 秒轮换一组） -->
+        <div class="art-core">
+          <div class="live-cap">
+            <span class="live-pill-ico"><i></i><i></i></span>
+            <b>{{LIVE_TITLE}}</b>
+          </div>
+
+          <div class="live-status">
+            <span class="ls-ico">
+              <svg viewBox="0 0 24 24"><path d="M12 21s-6.5-5.6-6.5-10.2A6.5 6.5 0 0 1 12 4.5a6.5 6.5 0 0 1 6.5 6.3C18.5 15.4 12 21 12 21z"/><circle cx="12" cy="10.8" r="2.2"/></svg>
+            </span>
+            <span class="live-state">
+              <i><span class="st-word">{{STATE1_WORD}}</span><span class="st-extra">{{STATE1_EXTRA}}</span></i>
+              <i><span class="st-word">{{STATE2_WORD}}</span><span class="st-extra">{{STATE2_EXTRA}}</span></i>
+              <i><span class="st-word">{{STATE3_WORD}}</span><span class="st-extra">{{STATE3_EXTRA}}</span></i>
+              <i><span class="st-word">{{STATE4_WORD}}</span><span class="st-extra">{{STATE4_EXTRA}}</span></i>
+              <i><span class="st-word">{{STATE5_WORD}}</span><span class="st-extra">{{STATE5_EXTRA}}</span></i>
+            </span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ======================= 第 2 页：业务模块 ======================= -->
+  <section id="page-work" class="page">
+    <header class="page-head rv" style="--d:.02s">
+      <span class="head-en">{{WORK_HEAD_EN}}</span>
+      <h2>{{WORK_TITLE}}</h2>
+    </header>
+
+    <!-- 模块卡 1（主线）：badge + 模块名 + 副标题 + N 段经历。
+         增删经历 = 复制/删除一个 .work-item 块。 -->
+    <article class="module-card rv" style="--d:.08s">
+      <div class="module-head">
+        <span class="module-badge badge-ops">{{MOD1_BADGE}}</span>
+        <div>
+          <h3>{{MOD1_NAME}}</h3>
+          <span class="module-sub">{{MOD1_SUB}}</span>
+        </div>
+      </div>
+
+      <div class="work-list">
+        <div class="work-item">
+          <div class="work-top"><h4>{{MOD1_J1_TITLE}}</h4><span class="period">{{MOD1_J1_PERIOD}}</span></div>
+          <ul class="chips">
+            <li>{{MOD1_J1_C1}}</li>
+            <li>{{MOD1_J1_C2}}</li>
+            <li>{{MOD1_J1_C3}}</li>
+          </ul>
+        </div>
+
+        <div class="work-item">
+          <div class="work-top"><h4>{{MOD1_J2_TITLE}}</h4><span class="period">{{MOD1_J2_PERIOD}}</span></div>
+          <ul class="chips">
+            <li>{{MOD1_J2_C1}}</li>
+            <li>{{MOD1_J2_C2}}</li>
+            <li>{{MOD1_J2_C3}}</li>
+            <li>{{MOD1_J2_C4}}</li>
+          </ul>
+        </div>
+
+        <div class="work-item">
+          <div class="work-top"><h4>{{MOD1_J3_TITLE}}</h4><span class="period">{{MOD1_J3_PERIOD}}</span></div>
+          <ul class="chips">
+            <li>{{MOD1_J3_C1}}</li>
+            <li>{{MOD1_J3_C2}}</li>
+            <li>{{MOD1_J3_C3}}</li>
+          </ul>
+        </div>
+
+        <div class="work-item">
+          <div class="work-top"><h4>{{MOD1_J4_TITLE}}</h4><span class="period">{{MOD1_J4_PERIOD}}</span></div>
+          <ul class="chips">
+            <li>{{MOD1_J4_C1}}</li>
+            <li>{{MOD1_J4_C2}}</li>
+            <li>{{MOD1_J4_C3}}</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <!-- 模块卡 2（支线）：不需要第二张卡就整块删除 -->
+    <article class="module-card rv" style="--d:.14s">
+      <div class="module-head">
+        <span class="module-badge badge-pm">{{MOD2_BADGE}}</span>
+        <div>
+          <h3>{{MOD2_NAME}}</h3>
+          <span class="module-sub">{{MOD2_SUB}}</span>
+        </div>
+      </div>
+
+      <div class="work-list">
+        <div class="work-item">
+          <div class="work-top"><h4>{{MOD2_J1_TITLE}}</h4><span class="period">{{MOD2_J1_PERIOD}}</span></div>
+          <ul class="chips">
+            <li>{{MOD2_J1_C1}}</li>
+            <li>{{MOD2_J1_C2}}</li>
+            <li>{{MOD2_J1_C3}}</li>
+          </ul>
+        </div>
+
+        <div class="work-item">
+          <div class="work-top"><h4>{{MOD2_J2_TITLE}}</h4><span class="period">{{MOD2_J2_PERIOD}}</span></div>
+          <ul class="chips">
+            <li>{{MOD2_J2_C1}}</li>
+            <li>{{MOD2_J2_C2}}</li>
+            <li>{{MOD2_J2_C3}}</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- ======================= 第 3 页：项目经历（时间轴卡 + 可选项目图） =======================
+       每张卡结构：公司/时间/职位 + 标题 + 要点列表 + 可选图片。
+       图片三种样式（配合 assets/work 图片）：
+         a. 透明底抠图   → <a class="tl-media" href="官网链接" ...><img src="...-cut.png"></a>
+         b. 纯白底截图   → <a class="tl-media tl-media--tall" href="...">…</a>
+         c. 横版官网截图 → <a class="tl-media tl-media--thumb" href="...">…</a>
+       无图片 → 删除整个 <a>/<figure class="tl-media"> 块；
+       有图无链接 → 换成 <figure class="tl-media"><img …></figure>。 -->
+  <section id="page-path" class="page">
+    <header class="page-head rv" style="--d:.02s">
+      <span class="head-en">{{PATH_HEAD_EN}}</span>
+      <h2>{{PATH_TITLE}}</h2>
+    </header>
+
+    <ol class="timeline">
+      <!-- 项目卡 1 -->
+      <li class="tl-item rv" style="--d:.06s">
+        <span class="tl-dot" aria-hidden="true"></span>
+        <article class="tl-card">
+          <div class="tl-body">
+            <div class="tl-meta"><span class="tl-co">{{P1_CO}}</span><span class="tl-time">{{P1_TIME}}</span><span class="tl-role">{{P1_ROLE}}</span></div>
+            <h3>{{P1_TITLE}}</h3>
+            <ul class="tl-points">
+              <li>{{P1_LI1}}</li>
+              <li>{{P1_LI2}}</li>
+              <li>{{P1_LI3}}</li>
+            </ul>
+          </div>
+          <a class="tl-media" href="{{P1_LINK}}" target="_blank" rel="noopener" title="{{P1_LINK_TITLE}}">
+            <img src="assets/work/{{P1_IMG}}" alt="{{P1_IMG_ALT}}" loading="lazy">
+          </a>
+        </article>
+      </li>
+
+      <!-- 项目卡 2 -->
+      <li class="tl-item rv" style="--d:.12s">
+        <span class="tl-dot" aria-hidden="true"></span>
+        <article class="tl-card">
+          <div class="tl-body">
+            <div class="tl-meta"><span class="tl-co">{{P2_CO}}</span><span class="tl-time">{{P2_TIME}}</span><span class="tl-role">{{P2_ROLE}}</span></div>
+            <h3>{{P2_TITLE}}</h3>
+            <ul class="tl-points">
+              <li>{{P2_LI1}}</li>
+              <li>{{P2_LI2}}</li>
+              <li>{{P2_LI3}}</li>
+            </ul>
+          </div>
+          <a class="tl-media" href="{{P2_LINK}}" target="_blank" rel="noopener" title="{{P2_LINK_TITLE}}">
+            <img src="assets/work/{{P2_IMG}}" alt="{{P2_IMG_ALT}}" loading="lazy">
+          </a>
+        </article>
+      </li>
+
+      <!-- 项目卡 3（示例：有图无链接 → figure） -->
+      <li class="tl-item rv" style="--d:.18s">
+        <span class="tl-dot" aria-hidden="true"></span>
+        <article class="tl-card">
+          <div class="tl-body">
+            <div class="tl-meta"><span class="tl-co">{{P3_CO}}</span><span class="tl-time">{{P3_TIME}}</span><span class="tl-role">{{P3_ROLE}}</span></div>
+            <h3>{{P3_TITLE}}</h3>
+            <ul class="tl-points">
+              <li>{{P3_LI1}}</li>
+              <li>{{P3_LI2}}</li>
+              <li>{{P3_LI3}}</li>
+            </ul>
+          </div>
+          <figure class="tl-media">
+            <img src="assets/work/{{P3_IMG}}" alt="{{P3_IMG_ALT}}" loading="lazy">
+          </figure>
+        </article>
+      </li>
+
+      <!-- 项目卡 4（示例：白底长图 → tl-media--tall） -->
+      <li class="tl-item rv" style="--d:.24s">
+        <span class="tl-dot" aria-hidden="true"></span>
+        <article class="tl-card">
+          <div class="tl-body">
+            <div class="tl-meta"><span class="tl-co">{{P4_CO}}</span><span class="tl-time">{{P4_TIME}}</span><span class="tl-role">{{P4_ROLE}}</span></div>
+            <h3>{{P4_TITLE}}</h3>
+            <ul class="tl-points">
+              <li>{{P4_LI1}}</li>
+              <li>{{P4_LI2}}</li>
+            </ul>
+          </div>
+          <a class="tl-media tl-media--tall" href="{{P4_LINK}}" target="_blank" rel="noopener" title="{{P4_LINK_TITLE}}">
+            <img src="assets/work/{{P4_IMG}}" alt="{{P4_IMG_ALT}}" loading="lazy">
+          </a>
+        </article>
+      </li>
+
+      <!-- 项目卡 5（示例：横版截图 → tl-media--thumb） -->
+      <li class="tl-item rv" style="--d:.3s">
+        <span class="tl-dot" aria-hidden="true"></span>
+        <article class="tl-card">
+          <div class="tl-body">
+            <div class="tl-meta"><span class="tl-co">{{P5_CO}}</span><span class="tl-time">{{P5_TIME}}</span><span class="tl-role">{{P5_ROLE}}</span></div>
+            <h3>{{P5_TITLE}}</h3>
+            <ul class="tl-points">
+              <li>{{P5_LI1}}</li>
+              <li>{{P5_LI2}}</li>
+            </ul>
+          </div>
+          <a class="tl-media tl-media--thumb" href="{{P5_LINK}}" target="_blank" rel="noopener" title="{{P5_LINK_TITLE}}">
+            <img src="assets/work/{{P5_IMG}}" alt="{{P5_IMG_ALT}}" loading="lazy">
+          </a>
+        </article>
+      </li>
+
+      <!-- 项目卡 6（示例：无图卡 → 删除 media 块即可） -->
+      <li class="tl-item rv" style="--d:.36s">
+        <span class="tl-dot" aria-hidden="true"></span>
+        <article class="tl-card">
+          <div class="tl-body">
+            <div class="tl-meta"><span class="tl-co">{{P6_CO}}</span><span class="tl-time">{{P6_TIME}}</span><span class="tl-role">{{P6_ROLE}}</span></div>
+            <h3>{{P6_TITLE}}</h3>
+            <ul class="tl-points">
+              <li>{{P6_LI1}}</li>
+              <li>{{P6_LI2}}</li>
+            </ul>
+          </div>
+        </article>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ======================= 第 4 页：技能与教育 ======================= -->
+  <section id="page-about" class="page">
+    <header class="page-head rv" style="--d:.02s">
+      <span class="head-en">{{ABOUT_HEAD_EN}}</span>
+      <h2>{{ABOUT_TITLE}}</h2>
+    </header>
+
+    <!-- 硬技能进度条：--w 即百分比，数字两处保持一致 -->
+    <div class="skill-block rv" style="--d:.08s" data-bars>
+      <p class="skill-en">Hard Skills</p>
+      <h3>{{HARD_TITLE}}</h3>
+      <ul class="bars">
+        <li><span class="bar-name">{{SKILL1_NAME}}</span><i style="--w:{{SKILL1_PCT}}"></i><b>{{SKILL1_PCT}}</b></li>
+        <li><span class="bar-name">{{SKILL2_NAME}}</span><i style="--w:{{SKILL2_PCT}}"></i><b>{{SKILL2_PCT}}</b></li>
+        <li><span class="bar-name">{{SKILL3_NAME}}</span><i style="--w:{{SKILL3_PCT}}"></i><b>{{SKILL3_PCT}}</b></li>
+        <li><span class="bar-name">{{SKILL4_NAME}}</span><i style="--w:{{SKILL4_PCT}}"></i><b>{{SKILL4_PCT}}</b></li>
+        <li><span class="bar-name">{{SKILL5_NAME}}</span><i style="--w:{{SKILL5_PCT}}"></i><b>{{SKILL5_PCT}}</b></li>
+        <li><span class="bar-name">{{SKILL6_NAME}}</span><i style="--w:{{SKILL6_PCT}}"></i><b>{{SKILL6_PCT}}</b></li>
+        <li><span class="bar-name">{{SKILL7_NAME}}</span><i style="--w:{{SKILL7_PCT}}"></i><b>{{SKILL7_PCT}}</b></li>
+      </ul>
+    </div>
+
+    <!-- 软技能 2 列宫格：图标可原样保留（通用线框图标），文字替换 -->
+    <div class="skill-block rv" style="--d:.14s">
+      <p class="skill-en">Soft Skills</p>
+      <h3>{{SOFT_TITLE}}</h3>
+      <ul class="soft-grid">
+        <li>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h12v8H8l-4 3z"/><path d="M20 9h1v9l-3-2h-6"/></svg>
+          {{SOFT1}}
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 14.6a4.6 4.6 0 0 1 5 4.4"/></svg>
+          {{SOFT2}}
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c-5 5.5-5 11.5 0 17 5-5.5 5-11.5 0-17z"/></svg>
+          {{SOFT3}}
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 21V4"/><path d="M6 4h12l-2.5 4L18 12H6"/></svg>
+          {{SOFT4}}
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 18a2.5 2.5 0 0 1 2.5-2.5H20"/></svg>
+          {{SOFT5}}
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6z"/><path d="m9.5 12.5 1.8 1.8 3.5-3.8"/></svg>
+          {{SOFT6}}
+        </li>
+      </ul>
+    </div>
+
+    <!-- 教育背景 -->
+    <div class="edu-block rv" style="--d:.2s">
+      <p class="edu-en">Education</p>
+      <article class="edu-card">
+        <div class="edu-row">
+          <h3>{{EDU_SCHOOL}}</h3>
+          <span class="edu-time">{{EDU_TIME}}</span>
+        </div>
+        <p class="edu-line">{{EDU_DEGREE}}</p>
+        <p class="edu-line muted">{{EDU_EXTRA}}</p>
+      </article>
+    </div>
+  </section>
+
+</main>
+
+<!-- 页脚：蓝黄呼吸条，点击翻到下一页（无需修改） -->
+<footer class="site-foot">
+  <button class="foot-rule" id="footNext" type="button" aria-label="翻到下一页"></button>
+</footer>
+
+<script src="assets/site.js"></script>
+</body>
+</html>
